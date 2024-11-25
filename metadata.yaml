@@ -1,0 +1,8 @@
+service:
+  full_name: CodeArtifact
+  short_name: codeArtifact
+  link: https://aws.amazon.com/codeartifact/
+  documentation: https://docs.aws.amazon.com/codeartifact/latest/APIReference/Welcome.html
+api_versions:
+  - api_version: v1alpha1
+    status: available
