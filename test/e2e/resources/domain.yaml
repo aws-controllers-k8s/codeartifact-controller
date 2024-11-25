@@ -1,0 +1,9 @@
+apiVersion: codeartifact.services.k8s.aws/v1alpha1
+kind: Domain
+metadata:
+  name: $DOMAIN_NAME
+spec:
+  name: $DOMAIN_NAME
+  tags:
+    - key: hello
+      value: world

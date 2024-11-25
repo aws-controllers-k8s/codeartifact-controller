@@ -39,6 +39,8 @@ import (
 	svcresource "github.com/aws-controllers-k8s/codeartifact-controller/pkg/resource"
 	svcsdk "github.com/aws/aws-sdk-go/service/codeartifact"
 
+	_ "github.com/aws-controllers-k8s/codeartifact-controller/pkg/resource/domain"
+
 	"github.com/aws-controllers-k8s/codeartifact-controller/pkg/version"
 )
 
