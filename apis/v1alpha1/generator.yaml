@@ -1,5 +1,35 @@
 ignore:
   resource_names:
+    # - Domain
+    - PackageGroup
+    - Repository
+operations:
+  DescribeDomain:
+    operation_type:
+      - ReadOne
+    resource:
       - Domain
-      - PackageGroup
-      - Repository
+resources:
+  Domain:
+    renames:
+      operations:
+        DescribeDomain:
+          input_fields:
+            Domain: Name
+        DeleteDomain:
+          input_fields:
+            Domain: Name
+        CreateDomain:
+          input_fields:
+            Domain: Name
+    update_operation:
+      custom_method_name: customUpdateDomain
+    fields:
+      Tags:
+        compare:
+          is_ignored: True
+    hooks:
+      delta_pre_compare:
+        code: compareTags(delta, a, b)
+      sdk_read_one_post_set_output:
+        template_path: hooks/domain/sdk_read_one_post_set_output.go.tpl

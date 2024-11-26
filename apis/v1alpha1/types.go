@@ -27,3 +27,93 @@ var (
 	_ = &aws.JSONValue{}
 	_ = ackv1alpha1.AWSAccountID("")
 )
+
+// Information about a domain. A domain is a container for repositories. When
+// you create a domain, it is empty until you add one or more repositories.
+type DomainDescription struct {
+	ARN             *string      `json:"arn,omitempty"`
+	AssetSizeBytes  *int64       `json:"assetSizeBytes,omitempty"`
+	CreatedTime     *metav1.Time `json:"createdTime,omitempty"`
+	EncryptionKey   *string      `json:"encryptionKey,omitempty"`
+	Name            *string      `json:"name,omitempty"`
+	Owner           *string      `json:"owner,omitempty"`
+	RepositoryCount *int64       `json:"repositoryCount,omitempty"`
+	S3BucketARN     *string      `json:"s3BucketARN,omitempty"`
+	Status          *string      `json:"status,omitempty"`
+}
+
+// Information about a domain, including its name, Amazon Resource Name (ARN),
+// and status. The ListDomains (https://docs.aws.amazon.com/codeartifact/latest/APIReference/API_ListDomains.html)
+// operation returns a list of DomainSummary objects.
+type DomainSummary struct {
+	ARN           *string      `json:"arn,omitempty"`
+	CreatedTime   *metav1.Time `json:"createdTime,omitempty"`
+	EncryptionKey *string      `json:"encryptionKey,omitempty"`
+	Name          *string      `json:"name,omitempty"`
+	Owner         *string      `json:"owner,omitempty"`
+	Status        *string      `json:"status,omitempty"`
+}
+
+// The description of the package group.
+type PackageGroupDescription struct {
+	ARN         *string      `json:"arn,omitempty"`
+	CreatedTime *metav1.Time `json:"createdTime,omitempty"`
+	DomainName  *string      `json:"domainName,omitempty"`
+	DomainOwner *string      `json:"domainOwner,omitempty"`
+}
+
+// Information about the identifiers of a package group.
+type PackageGroupReference struct {
+	ARN *string `json:"arn,omitempty"`
+}
+
+// Details about a package group.
+type PackageGroupSummary struct {
+	ARN         *string      `json:"arn,omitempty"`
+	CreatedTime *metav1.Time `json:"createdTime,omitempty"`
+	DomainName  *string      `json:"domainName,omitempty"`
+	DomainOwner *string      `json:"domainOwner,omitempty"`
+}
+
+// Details about a package version.
+type PackageVersionDescription struct {
+	PublishedTime *metav1.Time `json:"publishedTime,omitempty"`
+}
+
+// The details of a repository stored in CodeArtifact. A CodeArtifact repository
+// contains a set of package versions, each of which maps to a set of assets.
+// Repositories are polyglot—a single repository can contain packages of any
+// supported type. Each repository exposes endpoints for fetching and publishing
+// packages using tools like the npm CLI, the Maven CLI (mvn), and pip. You
+// can create up to 100 repositories per Amazon Web Services account.
+type RepositoryDescription struct {
+	AdministratorAccount *string      `json:"administratorAccount,omitempty"`
+	ARN                  *string      `json:"arn,omitempty"`
+	CreatedTime          *metav1.Time `json:"createdTime,omitempty"`
+	DomainName           *string      `json:"domainName,omitempty"`
+	DomainOwner          *string      `json:"domainOwner,omitempty"`
+}
+
+// Details about a repository, including its Amazon Resource Name (ARN), description,
+// and domain information. The ListRepositories (https://docs.aws.amazon.com/codeartifact/latest/APIReference/API_ListRepositories.html)
+// operation returns a list of RepositorySummary objects.
+type RepositorySummary struct {
+	AdministratorAccount *string      `json:"administratorAccount,omitempty"`
+	ARN                  *string      `json:"arn,omitempty"`
+	CreatedTime          *metav1.Time `json:"createdTime,omitempty"`
+	DomainName           *string      `json:"domainName,omitempty"`
+	DomainOwner          *string      `json:"domainOwner,omitempty"`
+}
+
+// An CodeArtifact resource policy that contains a resource ARN, document details,
+// and a revision.
+type ResourcePolicy struct {
+	ResourceARN *string `json:"resourceARN,omitempty"`
+}
+
+// A tag is a key-value pair that can be used to manage, search for, or filter
+// resources in CodeArtifact.
+type Tag struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
+}
