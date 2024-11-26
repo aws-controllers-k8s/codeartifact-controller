@@ -40,6 +40,7 @@ import (
 	svcsdk "github.com/aws/aws-sdk-go/service/codeartifact"
 
 	_ "github.com/aws-controllers-k8s/codeartifact-controller/pkg/resource/domain"
+	_ "github.com/aws-controllers-k8s/codeartifact-controller/pkg/resource/package_group"
 
 	"github.com/aws-controllers-k8s/codeartifact-controller/pkg/version"
 )

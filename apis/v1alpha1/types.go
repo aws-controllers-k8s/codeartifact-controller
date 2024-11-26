@@ -28,6 +28,11 @@ var (
 	_ = ackv1alpha1.AWSAccountID("")
 )
 
+// Contains details about a package version asset.
+type AssetSummary struct {
+	Size *int64 `json:"size,omitempty"`
+}
+
 // Information about a domain. A domain is a container for repositories. When
 // you create a domain, it is empty until you add one or more repositories.
 type DomainDescription struct {
@@ -54,30 +59,78 @@ type DomainSummary struct {
 	Status        *string      `json:"status,omitempty"`
 }
 
+// Details of the license data.
+type LicenseInfo struct {
+	Name *string `json:"name,omitempty"`
+	URL  *string `json:"url,omitempty"`
+}
+
+// Details about a package dependency.
+type PackageDependency struct {
+	DependencyType     *string `json:"dependencyType,omitempty"`
+	VersionRequirement *string `json:"versionRequirement,omitempty"`
+}
+
 // The description of the package group.
 type PackageGroupDescription struct {
 	ARN         *string      `json:"arn,omitempty"`
+	ContactInfo *string      `json:"contactInfo,omitempty"`
 	CreatedTime *metav1.Time `json:"createdTime,omitempty"`
+	Description *string      `json:"description,omitempty"`
 	DomainName  *string      `json:"domainName,omitempty"`
 	DomainOwner *string      `json:"domainOwner,omitempty"`
+	// The package group origin configuration that determines how package versions
+	// can enter repositories.
+	OriginConfiguration *PackageGroupOriginConfiguration `json:"originConfiguration,omitempty"`
+	// Information about the identifiers of a package group.
+	Parent  *PackageGroupReference `json:"parent,omitempty"`
+	Pattern *string                `json:"pattern,omitempty"`
+}
+
+// The package group origin configuration that determines how package versions
+// can enter repositories.
+type PackageGroupOriginConfiguration struct {
+	Restrictions map[string]*PackageGroupOriginRestriction `json:"restrictions,omitempty"`
+}
+
+// Contains information about the configured restrictions of the origin controls
+// of a package group.
+type PackageGroupOriginRestriction struct {
+	EffectiveMode *string `json:"effectiveMode,omitempty"`
+	// Information about the identifiers of a package group.
+	InheritedFrom     *PackageGroupReference `json:"inheritedFrom,omitempty"`
+	Mode              *string                `json:"mode,omitempty"`
+	RepositoriesCount *int64                 `json:"repositoriesCount,omitempty"`
 }
 
 // Information about the identifiers of a package group.
 type PackageGroupReference struct {
-	ARN *string `json:"arn,omitempty"`
+	ARN     *string `json:"arn,omitempty"`
+	Pattern *string `json:"pattern,omitempty"`
 }
 
 // Details about a package group.
 type PackageGroupSummary struct {
 	ARN         *string      `json:"arn,omitempty"`
+	ContactInfo *string      `json:"contactInfo,omitempty"`
 	CreatedTime *metav1.Time `json:"createdTime,omitempty"`
+	Description *string      `json:"description,omitempty"`
 	DomainName  *string      `json:"domainName,omitempty"`
 	DomainOwner *string      `json:"domainOwner,omitempty"`
+	// The package group origin configuration that determines how package versions
+	// can enter repositories.
+	OriginConfiguration *PackageGroupOriginConfiguration `json:"originConfiguration,omitempty"`
+	// Information about the identifiers of a package group.
+	Parent  *PackageGroupReference `json:"parent,omitempty"`
+	Pattern *string                `json:"pattern,omitempty"`
 }
 
 // Details about a package version.
 type PackageVersionDescription struct {
-	PublishedTime *metav1.Time `json:"publishedTime,omitempty"`
+	HomePage             *string      `json:"homePage,omitempty"`
+	PublishedTime        *metav1.Time `json:"publishedTime,omitempty"`
+	SourceCodeRepository *string      `json:"sourceCodeRepository,omitempty"`
+	Summary              *string      `json:"summary,omitempty"`
 }
 
 // The details of a repository stored in CodeArtifact. A CodeArtifact repository
@@ -90,6 +143,7 @@ type RepositoryDescription struct {
 	AdministratorAccount *string      `json:"administratorAccount,omitempty"`
 	ARN                  *string      `json:"arn,omitempty"`
 	CreatedTime          *metav1.Time `json:"createdTime,omitempty"`
+	Description          *string      `json:"description,omitempty"`
 	DomainName           *string      `json:"domainName,omitempty"`
 	DomainOwner          *string      `json:"domainOwner,omitempty"`
 }
@@ -101,6 +155,7 @@ type RepositorySummary struct {
 	AdministratorAccount *string      `json:"administratorAccount,omitempty"`
 	ARN                  *string      `json:"arn,omitempty"`
 	CreatedTime          *metav1.Time `json:"createdTime,omitempty"`
+	Description          *string      `json:"description,omitempty"`
 	DomainName           *string      `json:"domainName,omitempty"`
 	DomainOwner          *string      `json:"domainOwner,omitempty"`
 }
@@ -109,6 +164,11 @@ type RepositorySummary struct {
 // and a revision.
 type ResourcePolicy struct {
 	ResourceARN *string `json:"resourceARN,omitempty"`
+}
+
+// Contains the revision and status of a package version.
+type SuccessfulPackageVersionInfo struct {
+	Revision *string `json:"revision,omitempty"`
 }
 
 // A tag is a key-value pair that can be used to manage, search for, or filter

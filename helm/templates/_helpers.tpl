@@ -73,6 +73,7 @@ rules:
   - codeartifact.services.k8s.aws
   resources:
   - domains
+  - packagegroups
   verbs:
   - create
   - delete
@@ -85,6 +86,7 @@ rules:
   - codeartifact.services.k8s.aws
   resources:
   - domains/status
+  - packagegroups/status
   verbs:
   - get
   - patch

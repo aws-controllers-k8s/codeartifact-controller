@@ -10,6 +10,7 @@ rules:
   - codeartifact.services.k8s.aws
   resources:
   - domains
+  - packagegroups
   verbs:
   - get
   - list
