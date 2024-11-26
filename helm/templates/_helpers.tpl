@@ -70,6 +70,26 @@ rules:
   - list
   - watch
 - apiGroups:
+  - codeartifact.services.k8s.aws
+  resources:
+  - domains
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - codeartifact.services.k8s.aws
+  resources:
+  - domains/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - services.k8s.aws
   resources:
   - adoptedresources

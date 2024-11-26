@@ -29,11 +29,11 @@ const (
 	AllowUpstream_BLOCK AllowUpstream = "BLOCK"
 )
 
-type DomainStatus string
+type DomainStatus_SDK string
 
 const (
-	DomainStatus_Active  DomainStatus = "Active"
-	DomainStatus_Deleted DomainStatus = "Deleted"
+	DomainStatus_SDK_Active  DomainStatus_SDK = "Active"
+	DomainStatus_SDK_Deleted DomainStatus_SDK = "Deleted"
 )
 
 type ExternalConnectionStatus string
