@@ -1,0 +1,10 @@
+apiVersion: codeartifact.services.k8s.aws/v1alpha1
+kind: PackageGroup
+metadata:
+  name: $PACKAGE_GROUP_NAME
+spec:
+  pattern: $PACKAGE_GROUP_PATTERN
+  domain: $DOMAIN_NAME
+  tags:
+    - key: hello
+      value: world

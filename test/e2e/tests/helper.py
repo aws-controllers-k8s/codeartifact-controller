@@ -33,6 +33,20 @@ class CodeArtifactValidator:
     def domain_exists(self, domain_name: str):
         return self.get_domain(domain_name) is not None
     
+    def get_package_group(self, domain_name: str, package_group: str):
+        try:
+            response = self.codeartifact_client.describe_package_group(
+                domain=domain_name,
+                packageGroup=package_group,
+            )
+            return response["packageGroup"]
+        except Exception as e:
+            logging.error(f"Error: {e}")
+            return None
+    
+    def package_group_exists(self, domain_name: str, package_group: str):
+        return self.get_package_group(domain_name, package_group) is not None
+    
     def get_resource_tags(self, arn: str):
         try:
             response = self.codeartifact_client.list_tags_for_resource(

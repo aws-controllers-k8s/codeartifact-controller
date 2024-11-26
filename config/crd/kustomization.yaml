@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - common
   - bases/codeartifact.services.k8s.aws_domains.yaml
+  - bases/codeartifact.services.k8s.aws_packagegroups.yaml

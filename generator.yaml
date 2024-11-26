@@ -1,7 +1,7 @@
 ignore:
   resource_names:
     # - Domain
-    - PackageGroup
+    # - PackageGroup
     - Repository
 operations:
   DescribeDomain:
@@ -9,6 +9,11 @@ operations:
       - ReadOne
     resource:
       - Domain
+  DescribePackageGroup:
+    operation_type:
+      - ReadOne
+    resource:
+      - PackageGroup
 resources:
   Domain:
     renames:
@@ -22,8 +27,6 @@ resources:
         CreateDomain:
           input_fields:
             Domain: Name
-    update_operation:
-      custom_method_name: customUpdateDomain
     fields:
       Tags:
         compare:
@@ -33,3 +36,33 @@ resources:
         code: compareTags(delta, a, b)
       sdk_read_one_post_set_output:
         template_path: hooks/domain/sdk_read_one_post_set_output.go.tpl
+    update_operation:
+      custom_method_name: customUpdateDomain
+  PackageGroup:
+    renames:
+      operations:
+        DescribePackageGroup:
+          input_fields:
+            PackageGroup: Pattern
+        DeletePackageGroup:
+          input_fields:
+            PackageGroup: Pattern
+        CreatePackageGroup:
+          input_fields:
+            PackageGroup: Pattern
+        UpdatePackageGroup:
+          input_fields:
+            PackageGroup: Pattern
+    fields:
+      Tags:
+        compare:
+          is_ignored: True
+      Pattern:
+        is_primary_key: true
+    hooks:
+      delta_pre_compare:
+        code: compareTags(delta, a, b)
+      sdk_read_one_post_set_output:
+        template_path: hooks/domain/sdk_read_one_post_set_output.go.tpl
+      sdk_update_pre_build_request:
+        template_path: hooks/package_group/sdk_update_pre_build_request.go.tpl
