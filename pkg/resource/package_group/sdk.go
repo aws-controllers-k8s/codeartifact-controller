@@ -28,8 +28,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/codeartifact"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/codeartifact"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/codeartifact/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +42,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.CodeArtifact{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.PackageGroup{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +50,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,13 +76,11 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribePackageGroupOutput
-	resp, err = rm.sdkapi.DescribePackageGroupWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribePackageGroup(ctx, input)
 	rm.metrics.RecordAPICall("READ_ONE", "DescribePackageGroup", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "ResourceNotFoundException" {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ResourceNotFoundException" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -128,8 +128,8 @@ func (rm *resourceManager) sdkFind(
 			f6f0 := map[string]*svcapitypes.PackageGroupOriginRestriction{}
 			for f6f0key, f6f0valiter := range resp.PackageGroup.OriginConfiguration.Restrictions {
 				f6f0val := &svcapitypes.PackageGroupOriginRestriction{}
-				if f6f0valiter.EffectiveMode != nil {
-					f6f0val.EffectiveMode = f6f0valiter.EffectiveMode
+				if f6f0valiter.EffectiveMode != "" {
+					f6f0val.EffectiveMode = aws.String(string(f6f0valiter.EffectiveMode))
 				}
 				if f6f0valiter.InheritedFrom != nil {
 					f6f0valf1 := &svcapitypes.PackageGroupReference{}
@@ -141,8 +141,8 @@ func (rm *resourceManager) sdkFind(
 					}
 					f6f0val.InheritedFrom = f6f0valf1
 				}
-				if f6f0valiter.Mode != nil {
-					f6f0val.Mode = f6f0valiter.Mode
+				if f6f0valiter.Mode != "" {
+					f6f0val.Mode = aws.String(string(f6f0valiter.Mode))
 				}
 				if f6f0valiter.RepositoriesCount != nil {
 					f6f0val.RepositoriesCount = f6f0valiter.RepositoriesCount
@@ -198,13 +198,13 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribePackageGroupInput{}
 
 	if r.ko.Spec.Domain != nil {
-		res.SetDomain(*r.ko.Spec.Domain)
+		res.Domain = r.ko.Spec.Domain
 	}
 	if r.ko.Spec.DomainOwner != nil {
-		res.SetDomainOwner(*r.ko.Spec.DomainOwner)
+		res.DomainOwner = r.ko.Spec.DomainOwner
 	}
 	if r.ko.Spec.Pattern != nil {
-		res.SetPackageGroup(*r.ko.Spec.Pattern)
+		res.PackageGroup = r.ko.Spec.Pattern
 	}
 
 	return res, nil
@@ -229,7 +229,7 @@ func (rm *resourceManager) sdkCreate(
 
 	var resp *svcsdk.CreatePackageGroupOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreatePackageGroupWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreatePackageGroup(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreatePackageGroup", err)
 	if err != nil {
 		return nil, err
@@ -276,8 +276,8 @@ func (rm *resourceManager) sdkCreate(
 			f6f0 := map[string]*svcapitypes.PackageGroupOriginRestriction{}
 			for f6f0key, f6f0valiter := range resp.PackageGroup.OriginConfiguration.Restrictions {
 				f6f0val := &svcapitypes.PackageGroupOriginRestriction{}
-				if f6f0valiter.EffectiveMode != nil {
-					f6f0val.EffectiveMode = f6f0valiter.EffectiveMode
+				if f6f0valiter.EffectiveMode != "" {
+					f6f0val.EffectiveMode = aws.String(string(f6f0valiter.EffectiveMode))
 				}
 				if f6f0valiter.InheritedFrom != nil {
 					f6f0valf1 := &svcapitypes.PackageGroupReference{}
@@ -289,8 +289,8 @@ func (rm *resourceManager) sdkCreate(
 					}
 					f6f0val.InheritedFrom = f6f0valf1
 				}
-				if f6f0valiter.Mode != nil {
-					f6f0val.Mode = f6f0valiter.Mode
+				if f6f0valiter.Mode != "" {
+					f6f0val.Mode = aws.String(string(f6f0valiter.Mode))
 				}
 				if f6f0valiter.RepositoriesCount != nil {
 					f6f0val.RepositoriesCount = f6f0valiter.RepositoriesCount
@@ -334,33 +334,33 @@ func (rm *resourceManager) newCreateRequestPayload(
 	res := &svcsdk.CreatePackageGroupInput{}
 
 	if r.ko.Spec.ContactInfo != nil {
-		res.SetContactInfo(*r.ko.Spec.ContactInfo)
+		res.ContactInfo = r.ko.Spec.ContactInfo
 	}
 	if r.ko.Spec.Description != nil {
-		res.SetDescription(*r.ko.Spec.Description)
+		res.Description = r.ko.Spec.Description
 	}
 	if r.ko.Spec.Domain != nil {
-		res.SetDomain(*r.ko.Spec.Domain)
+		res.Domain = r.ko.Spec.Domain
 	}
 	if r.ko.Spec.DomainOwner != nil {
-		res.SetDomainOwner(*r.ko.Spec.DomainOwner)
+		res.DomainOwner = r.ko.Spec.DomainOwner
 	}
 	if r.ko.Spec.Pattern != nil {
-		res.SetPackageGroup(*r.ko.Spec.Pattern)
+		res.PackageGroup = r.ko.Spec.Pattern
 	}
 	if r.ko.Spec.Tags != nil {
-		f5 := []*svcsdk.Tag{}
+		f5 := []svcsdktypes.Tag{}
 		for _, f5iter := range r.ko.Spec.Tags {
-			f5elem := &svcsdk.Tag{}
+			f5elem := &svcsdktypes.Tag{}
 			if f5iter.Key != nil {
-				f5elem.SetKey(*f5iter.Key)
+				f5elem.Key = f5iter.Key
 			}
 			if f5iter.Value != nil {
-				f5elem.SetValue(*f5iter.Value)
+				f5elem.Value = f5iter.Value
 			}
-			f5 = append(f5, f5elem)
+			f5 = append(f5, *f5elem)
 		}
-		res.SetTags(f5)
+		res.Tags = f5
 	}
 
 	return res, nil
@@ -396,7 +396,7 @@ func (rm *resourceManager) sdkUpdate(
 
 	var resp *svcsdk.UpdatePackageGroupOutput
 	_ = resp
-	resp, err = rm.sdkapi.UpdatePackageGroupWithContext(ctx, input)
+	resp, err = rm.sdkapi.UpdatePackageGroup(ctx, input)
 	rm.metrics.RecordAPICall("UPDATE", "UpdatePackageGroup", err)
 	if err != nil {
 		return nil, err
@@ -443,8 +443,8 @@ func (rm *resourceManager) sdkUpdate(
 			f6f0 := map[string]*svcapitypes.PackageGroupOriginRestriction{}
 			for f6f0key, f6f0valiter := range resp.PackageGroup.OriginConfiguration.Restrictions {
 				f6f0val := &svcapitypes.PackageGroupOriginRestriction{}
-				if f6f0valiter.EffectiveMode != nil {
-					f6f0val.EffectiveMode = f6f0valiter.EffectiveMode
+				if f6f0valiter.EffectiveMode != "" {
+					f6f0val.EffectiveMode = aws.String(string(f6f0valiter.EffectiveMode))
 				}
 				if f6f0valiter.InheritedFrom != nil {
 					f6f0valf1 := &svcapitypes.PackageGroupReference{}
@@ -456,8 +456,8 @@ func (rm *resourceManager) sdkUpdate(
 					}
 					f6f0val.InheritedFrom = f6f0valf1
 				}
-				if f6f0valiter.Mode != nil {
-					f6f0val.Mode = f6f0valiter.Mode
+				if f6f0valiter.Mode != "" {
+					f6f0val.Mode = aws.String(string(f6f0valiter.Mode))
 				}
 				if f6f0valiter.RepositoriesCount != nil {
 					f6f0val.RepositoriesCount = f6f0valiter.RepositoriesCount
@@ -502,19 +502,19 @@ func (rm *resourceManager) newUpdateRequestPayload(
 	res := &svcsdk.UpdatePackageGroupInput{}
 
 	if r.ko.Spec.ContactInfo != nil {
-		res.SetContactInfo(*r.ko.Spec.ContactInfo)
+		res.ContactInfo = r.ko.Spec.ContactInfo
 	}
 	if r.ko.Spec.Description != nil {
-		res.SetDescription(*r.ko.Spec.Description)
+		res.Description = r.ko.Spec.Description
 	}
 	if r.ko.Spec.Domain != nil {
-		res.SetDomain(*r.ko.Spec.Domain)
+		res.Domain = r.ko.Spec.Domain
 	}
 	if r.ko.Spec.DomainOwner != nil {
-		res.SetDomainOwner(*r.ko.Spec.DomainOwner)
+		res.DomainOwner = r.ko.Spec.DomainOwner
 	}
 	if r.ko.Spec.Pattern != nil {
-		res.SetPackageGroup(*r.ko.Spec.Pattern)
+		res.PackageGroup = r.ko.Spec.Pattern
 	}
 
 	return res, nil
@@ -536,7 +536,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeletePackageGroupOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeletePackageGroupWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeletePackageGroup(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeletePackageGroup", err)
 	return nil, err
 }
@@ -549,13 +549,13 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeletePackageGroupInput{}
 
 	if r.ko.Spec.Domain != nil {
-		res.SetDomain(*r.ko.Spec.Domain)
+		res.Domain = r.ko.Spec.Domain
 	}
 	if r.ko.Spec.DomainOwner != nil {
-		res.SetDomainOwner(*r.ko.Spec.DomainOwner)
+		res.DomainOwner = r.ko.Spec.DomainOwner
 	}
 	if r.ko.Spec.Pattern != nil {
-		res.SetPackageGroup(*r.ko.Spec.Pattern)
+		res.PackageGroup = r.ko.Spec.Pattern
 	}
 
 	return res, nil

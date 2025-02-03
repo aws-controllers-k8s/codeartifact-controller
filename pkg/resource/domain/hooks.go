@@ -20,8 +20,9 @@ import (
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/service/codeartifact"
-	svcsdk "github.com/aws/aws-sdk-go/service/codeartifact"
+	"github.com/aws/aws-sdk-go-v2/service/codeartifact"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/codeartifact"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/codeartifact/types"
 
 	svcapitypes "github.com/aws-controllers-k8s/codeartifact-controller/apis/v1alpha1"
 )
@@ -69,14 +70,15 @@ func (rm *resourceManager) syncTags(
 
 	toAdd := FromACKTags(added)
 
-	var toDeleteTagKeys []*string
+	var toDeleteTagKeys []string
 	for k, _ := range removed {
-		toDeleteTagKeys = append(toDeleteTagKeys, &k)
+		toDeleteTagKeys = append(toDeleteTagKeys, k)
 	}
 
 	if len(toDeleteTagKeys) > 0 {
 		rlog.Debug("removing tags from Permission resource", "tags", toDeleteTagKeys)
 		_, err = rm.sdkapi.UntagResource(
+			ctx,
 			&svcsdk.UntagResourceInput{
 				ResourceArn: (*string)(resourceArn),
 				TagKeys:     toDeleteTagKeys,
@@ -88,6 +90,7 @@ func (rm *resourceManager) syncTags(
 	if len(toAdd) > 0 {
 		rlog.Debug("adding tags to Permission resource", "tags", toAdd)
 		_, err := rm.sdkapi.TagResource(
+			ctx,
 			&svcsdk.TagResourceInput{
 				ResourceArn: (*string)(resourceArn),
 				Tags:        rm.sdkTags(toAdd),
@@ -105,7 +108,7 @@ func (rm *resourceManager) syncTags(
 // sdkTags converts *svcapitypes.Tag array to a *svcsdk.Tag array
 func (rm *resourceManager) sdkTags(
 	tags []*svcapitypes.Tag,
-) (sdktags []*svcsdk.Tag) {
+) (sdktags []svcsdktypes.Tag) {
 
 	for _, i := range tags {
 		sdktag := rm.newTag(*i)
@@ -141,13 +144,13 @@ func compareTags(
 
 func (rm *resourceManager) newTag(
 	c svcapitypes.Tag,
-) *svcsdk.Tag {
-	res := &svcsdk.Tag{}
+) svcsdktypes.Tag {
+	res := svcsdktypes.Tag{}
 	if c.Key != nil {
-		res.SetKey(*c.Key)
+		res.Key = c.Key
 	}
 	if c.Value != nil {
-		res.SetValue(*c.Value)
+		res.Value = c.Value
 	}
 	return res
 }
@@ -183,7 +186,7 @@ func (rm *resourceManager) getTags(
 	}()
 
 	var listTagsResponse *codeartifact.ListTagsForResourceOutput
-	listTagsResponse, err = rm.sdkapi.ListTagsForResourceWithContext(
+	listTagsResponse, err = rm.sdkapi.ListTagsForResource(
 		ctx,
 		&codeartifact.ListTagsForResourceInput{
 			ResourceArn: &resourceARN,
