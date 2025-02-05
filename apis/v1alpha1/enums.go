@@ -36,6 +36,13 @@ const (
 	DomainStatus_SDK_Deleted DomainStatus_SDK = "Deleted"
 )
 
+type EndpointType string
+
+const (
+	EndpointType_dualstack EndpointType = "dualstack"
+	EndpointType_ipv4      EndpointType = "ipv4"
+)
+
 type ExternalConnectionStatus string
 
 const (
@@ -54,14 +61,14 @@ const (
 type PackageFormat string
 
 const (
-	PackageFormat_npm     PackageFormat = "npm"
-	PackageFormat_pypi    PackageFormat = "pypi"
-	PackageFormat_maven   PackageFormat = "maven"
-	PackageFormat_nuget   PackageFormat = "nuget"
+	PackageFormat_cargo   PackageFormat = "cargo"
 	PackageFormat_generic PackageFormat = "generic"
+	PackageFormat_maven   PackageFormat = "maven"
+	PackageFormat_npm     PackageFormat = "npm"
+	PackageFormat_nuget   PackageFormat = "nuget"
+	PackageFormat_pypi    PackageFormat = "pypi"
 	PackageFormat_ruby    PackageFormat = "ruby"
 	PackageFormat_swift   PackageFormat = "swift"
-	PackageFormat_cargo   PackageFormat = "cargo"
 )
 
 type PackageGroupAllowedRepositoryUpdateType string
@@ -109,8 +116,8 @@ const (
 type PackageVersionOriginType string
 
 const (
-	PackageVersionOriginType_INTERNAL PackageVersionOriginType = "INTERNAL"
 	PackageVersionOriginType_EXTERNAL PackageVersionOriginType = "EXTERNAL"
+	PackageVersionOriginType_INTERNAL PackageVersionOriginType = "INTERNAL"
 	PackageVersionOriginType_UNKNOWN  PackageVersionOriginType = "UNKNOWN"
 )
 
@@ -123,22 +130,22 @@ const (
 type PackageVersionStatus string
 
 const (
+	PackageVersionStatus_Archived   PackageVersionStatus = "Archived"
+	PackageVersionStatus_Deleted    PackageVersionStatus = "Deleted"
+	PackageVersionStatus_Disposed   PackageVersionStatus = "Disposed"
 	PackageVersionStatus_Published  PackageVersionStatus = "Published"
 	PackageVersionStatus_Unfinished PackageVersionStatus = "Unfinished"
 	PackageVersionStatus_Unlisted   PackageVersionStatus = "Unlisted"
-	PackageVersionStatus_Archived   PackageVersionStatus = "Archived"
-	PackageVersionStatus_Disposed   PackageVersionStatus = "Disposed"
-	PackageVersionStatus_Deleted    PackageVersionStatus = "Deleted"
 )
 
 type ResourceType string
 
 const (
+	ResourceType_asset           ResourceType = "asset"
 	ResourceType_domain          ResourceType = "domain"
-	ResourceType_repository      ResourceType = "repository"
 	ResourceType_package         ResourceType = "package"
 	ResourceType_package_version ResourceType = "package-version"
-	ResourceType_asset           ResourceType = "asset"
+	ResourceType_repository      ResourceType = "repository"
 )
 
 type ValidationExceptionReason string
@@ -147,6 +154,6 @@ const (
 	ValidationExceptionReason_CANNOT_PARSE            ValidationExceptionReason = "CANNOT_PARSE"
 	ValidationExceptionReason_ENCRYPTION_KEY_ERROR    ValidationExceptionReason = "ENCRYPTION_KEY_ERROR"
 	ValidationExceptionReason_FIELD_VALIDATION_FAILED ValidationExceptionReason = "FIELD_VALIDATION_FAILED"
-	ValidationExceptionReason_UNKNOWN_OPERATION       ValidationExceptionReason = "UNKNOWN_OPERATION"
 	ValidationExceptionReason_OTHER                   ValidationExceptionReason = "OTHER"
+	ValidationExceptionReason_UNKNOWN_OPERATION       ValidationExceptionReason = "UNKNOWN_OPERATION"
 )
