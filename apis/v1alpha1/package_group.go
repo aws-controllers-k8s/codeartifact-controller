@@ -24,20 +24,28 @@ import (
 type PackageGroupSpec struct {
 
 	// The contact information for the created package group.
+
 	ContactInfo *string `json:"contactInfo,omitempty"`
 	// A description of the package group.
+
 	Description *string `json:"description,omitempty"`
 	// The name of the domain in which you want to create a package group.
+
 	// +kubebuilder:validation:Required
+
 	Domain *string `json:"domain"`
 	// The 12-digit account number of the Amazon Web Services account that owns
 	// the domain. It does not include dashes or spaces.
+
 	DomainOwner *string `json:"domainOwner,omitempty"`
 	// The pattern of the package group to create. The pattern is also the identifier
 	// of the package group.
+
 	// +kubebuilder:validation:Required
+
 	Pattern *string `json:"pattern"`
 	// One or more tag key-value pairs for the package group.
+
 	Tags []*Tag `json:"tags,omitempty"`
 }
 
@@ -48,7 +56,7 @@ type PackageGroupStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
