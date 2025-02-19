@@ -36,14 +36,18 @@ type DomainSpec struct {
 	// CMK with your domain. For more information, see Using symmetric and asymmetric
 	// keys (https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html)
 	// in the Key Management Service Developer Guide.
+
 	EncryptionKey *string `json:"encryptionKey,omitempty"`
 	// The name of the domain to create. All domain names in an Amazon Web Services
 	// Region that are in the same Amazon Web Services account must be unique. The
 	// domain name is used as the prefix in DNS hostnames. Do not use sensitive
 	// information in a domain name because it is publicly discoverable.
+
 	// +kubebuilder:validation:Required
+
 	Name *string `json:"name"`
 	// One or more tag key-value pairs for the domain.
+
 	Tags []*Tag `json:"tags,omitempty"`
 }
 
@@ -54,7 +58,7 @@ type DomainStatus struct {
 	// constructed ARN for the resource
 	// +kubebuilder:validation:Optional
 	ACKResourceMetadata *ackv1alpha1.ResourceMetadata `json:"ackResourceMetadata"`
-	// All CRS managed by ACK have a common `Status.Conditions` member that
+	// All CRs managed by ACK have a common `Status.Conditions` member that
 	// contains a collection of `ackv1alpha1.Condition` objects that describe
 	// the various terminal states of the CR and its backend AWS service API
 	// resource
