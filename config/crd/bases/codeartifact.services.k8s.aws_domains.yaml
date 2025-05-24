@@ -54,6 +54,8 @@ spec:
                   CMK with your domain. For more information, see Using symmetric and asymmetric
                   keys (https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html)
                   in the Key Management Service Developer Guide.
+
+                  Regex Pattern: `^\S+$`
                 type: string
               name:
                 description: |-
@@ -61,6 +63,8 @@ spec:
                   Region that are in the same Amazon Web Services account must be unique. The
                   domain name is used as the prefix in DNS hostnames. Do not use sensitive
                   information in a domain name because it is publicly discoverable.
+
+                  Regex Pattern: `^[a-z][a-z0-9\-]{0,48}[a-z0-9]$`
                 type: string
               tags:
                 description: One or more tag key-value pairs for the domain.
@@ -155,7 +159,10 @@ spec:
                 format: date-time
                 type: string
               owner:
-                description: The Amazon Web Services account ID that owns the domain.
+                description: |-
+                  The Amazon Web Services account ID that owns the domain.
+
+                  Regex Pattern: `^[0-9]{12}$`
                 type: string
               repositoryCount:
                 description: The number of repositories in the domain.
@@ -165,6 +172,8 @@ spec:
                 description: |-
                   The Amazon Resource Name (ARN) of the Amazon S3 bucket that is used to store
                   package assets in the domain.
+
+                  Regex Pattern: `^\S+$`
                 type: string
               status:
                 description: The current status of a domain.

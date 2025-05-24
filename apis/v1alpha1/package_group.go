@@ -24,17 +24,27 @@ import (
 type PackageGroupSpec struct {
 
 	// The contact information for the created package group.
+	//
+	// Regex Pattern: `^\P{C}*$`
 	ContactInfo *string `json:"contactInfo,omitempty"`
 	// A description of the package group.
+	//
+	// Regex Pattern: `^\P{C}*$`
 	Description *string `json:"description,omitempty"`
 	// The name of the domain in which you want to create a package group.
+	//
+	// Regex Pattern: `^[a-z][a-z0-9\-]{0,48}[a-z0-9]$`
 	// +kubebuilder:validation:Required
 	Domain *string `json:"domain"`
 	// The 12-digit account number of the Amazon Web Services account that owns
 	// the domain. It does not include dashes or spaces.
+	//
+	// Regex Pattern: `^[0-9]{12}$`
 	DomainOwner *string `json:"domainOwner,omitempty"`
 	// The pattern of the package group to create. The pattern is also the identifier
 	// of the package group.
+	//
+	// Regex Pattern: `^[^\p{C}\p{IsWhitespace}]+$`
 	// +kubebuilder:validation:Required
 	Pattern *string `json:"pattern"`
 	// One or more tag key-value pairs for the package group.
@@ -58,6 +68,8 @@ type PackageGroupStatus struct {
 	// +kubebuilder:validation:Optional
 	CreatedTime *metav1.Time `json:"createdTime,omitempty"`
 	// The name of the domain that contains the package group.
+	//
+	// Regex Pattern: `^[a-z][a-z0-9\-]{0,48}[a-z0-9]$`
 	// +kubebuilder:validation:Optional
 	DomainName *string `json:"domainName,omitempty"`
 	// The package group origin configuration that determines how package versions

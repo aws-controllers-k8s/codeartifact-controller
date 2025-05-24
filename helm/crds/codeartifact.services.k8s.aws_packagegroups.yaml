@@ -40,24 +40,36 @@ spec:
             description: PackageGroupSpec defines the desired state of PackageGroup.
             properties:
               contactInfo:
-                description: The contact information for the created package group.
+                description: |-
+                  The contact information for the created package group.
+
+                  Regex Pattern: `^\P{C}*$`
                 type: string
               description:
-                description: A description of the package group.
+                description: |-
+                  A description of the package group.
+
+                  Regex Pattern: `^\P{C}*$`
                 type: string
               domain:
-                description: The name of the domain in which you want to create a
-                  package group.
+                description: |-
+                  The name of the domain in which you want to create a package group.
+
+                  Regex Pattern: `^[a-z][a-z0-9\-]{0,48}[a-z0-9]$`
                 type: string
               domainOwner:
                 description: |-
                   The 12-digit account number of the Amazon Web Services account that owns
                   the domain. It does not include dashes or spaces.
+
+                  Regex Pattern: `^[0-9]{12}$`
                 type: string
               pattern:
                 description: |-
                   The pattern of the package group to create. The pattern is also the identifier
                   of the package group.
+
+                  Regex Pattern: `^[^\p{C}\p{IsWhitespace}]+$`
                 type: string
               tags:
                 description: One or more tag key-value pairs for the package group.
@@ -149,7 +161,10 @@ spec:
                 format: date-time
                 type: string
               domainName:
-                description: The name of the domain that contains the package group.
+                description: |-
+                  The name of the domain that contains the package group.
+
+                  Regex Pattern: `^[a-z][a-z0-9\-]{0,48}[a-z0-9]$`
                 type: string
               originConfiguration:
                 description: |-
