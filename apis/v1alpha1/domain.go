@@ -36,11 +36,15 @@ type DomainSpec struct {
 	// CMK with your domain. For more information, see Using symmetric and asymmetric
 	// keys (https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html)
 	// in the Key Management Service Developer Guide.
+	//
+	// Regex Pattern: `^\S+$`
 	EncryptionKey *string `json:"encryptionKey,omitempty"`
 	// The name of the domain to create. All domain names in an Amazon Web Services
 	// Region that are in the same Amazon Web Services account must be unique. The
 	// domain name is used as the prefix in DNS hostnames. Do not use sensitive
 	// information in a domain name because it is publicly discoverable.
+	//
+	// Regex Pattern: `^[a-z][a-z0-9\-]{0,48}[a-z0-9]$`
 	// +kubebuilder:validation:Required
 	Name *string `json:"name"`
 	// One or more tag key-value pairs for the domain.
@@ -67,6 +71,8 @@ type DomainStatus struct {
 	// +kubebuilder:validation:Optional
 	CreatedTime *metav1.Time `json:"createdTime,omitempty"`
 	// The Amazon Web Services account ID that owns the domain.
+	//
+	// Regex Pattern: `^[0-9]{12}$`
 	// +kubebuilder:validation:Optional
 	Owner *string `json:"owner,omitempty"`
 	// The number of repositories in the domain.
@@ -74,6 +80,8 @@ type DomainStatus struct {
 	RepositoryCount *int64 `json:"repositoryCount,omitempty"`
 	// The Amazon Resource Name (ARN) of the Amazon S3 bucket that is used to store
 	// package assets in the domain.
+	//
+	// Regex Pattern: `^\S+$`
 	// +kubebuilder:validation:Optional
 	S3BucketARN *string `json:"s3BucketARN,omitempty"`
 	// The current status of a domain.
