@@ -107,16 +107,17 @@ func (r *resource) SetIdentifiers(identifier *ackv1alpha1.AWSIdentifiers) error 
 
 // PopulateResourceFromAnnotation populates the fields passed from adoption annotation
 func (r *resource) PopulateResourceFromAnnotation(fields map[string]string) error {
-	tmp, ok := fields["pattern"]
+	primaryKey, ok := fields["pattern"]
 	if !ok {
 		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: pattern"))
 	}
-	r.ko.Spec.Pattern = &tmp
-
-	f0, f0ok := fields["domain"]
-	if f0ok {
-		r.ko.Spec.Domain = aws.String(f0)
+	r.ko.Spec.Pattern = &primaryKey
+	f0, ok := fields["domain"]
+	if !ok {
+		return ackerrors.NewTerminalError(fmt.Errorf("required field missing: domain"))
 	}
+	r.ko.Spec.Domain = &f0
+
 	f1, f1ok := fields["domainOwner"]
 	if f1ok {
 		r.ko.Spec.DomainOwner = aws.String(f1)
