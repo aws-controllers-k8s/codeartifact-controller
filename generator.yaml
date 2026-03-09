@@ -7,13 +7,9 @@ operations:
   DescribeDomain:
     operation_type:
       - ReadOne
-    resource:
-      - Domain
   DescribePackageGroup:
     operation_type:
       - ReadOne
-    resource:
-      - PackageGroup
 resources:
   Domain:
     renames:
