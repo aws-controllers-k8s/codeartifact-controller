@@ -27,6 +27,11 @@ resources:
       Tags:
         compare:
           is_ignored: True
+      EncryptionKey:
+        references:
+          resource: Key
+          service_name: kms
+          path: Status.ACKResourceMetadata.ARN
     hooks:
       delta_pre_compare:
         code: compareTags(delta, a, b)

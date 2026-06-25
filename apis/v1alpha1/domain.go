@@ -38,7 +38,8 @@ type DomainSpec struct {
 	// in the Key Management Service Developer Guide.
 	//
 	// Regex Pattern: `^\S+$`
-	EncryptionKey *string `json:"encryptionKey,omitempty"`
+	EncryptionKey    *string                                  `json:"encryptionKey,omitempty"`
+	EncryptionKeyRef *ackv1alpha1.AWSResourceReferenceWrapper `json:"encryptionKeyRef,omitempty"`
 	// The name of the domain to create. All domain names in an Amazon Web Services
 	// Region that are in the same Amazon Web Services account must be unique. The
 	// domain name is used as the prefix in DNS hostnames. Do not use sensitive
