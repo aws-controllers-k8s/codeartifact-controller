@@ -170,6 +170,11 @@ func (in *DomainSpec) DeepCopyInto(out *DomainSpec) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.EncryptionKeyRef != nil {
+		in, out := &in.EncryptionKeyRef, &out.EncryptionKeyRef
+		*out = new(corev1alpha1.AWSResourceReferenceWrapper)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Name != nil {
 		in, out := &in.Name, &out.Name
 		*out = new(string)
