@@ -20,6 +20,7 @@ import (
 
 	ackcompare "github.com/aws-controllers-k8s/runtime/pkg/compare"
 	acktags "github.com/aws-controllers-k8s/runtime/pkg/tags"
+	"k8s.io/apimachinery/pkg/api/equality"
 )
 
 // Hack to avoid import errors during build...
@@ -69,6 +70,9 @@ func newResourceDelta(
 		if *a.ko.Spec.DomainOwner != *b.ko.Spec.DomainOwner {
 			delta.Add("Spec.DomainOwner", a.ko.Spec.DomainOwner, b.ko.Spec.DomainOwner)
 		}
+	}
+	if !equality.Semantic.Equalities.DeepEqual(a.ko.Spec.DomainRef, b.ko.Spec.DomainRef) {
+		delta.Add("Spec.DomainRef", a.ko.Spec.DomainRef, b.ko.Spec.DomainRef)
 	}
 	if ackcompare.HasNilDifference(a.ko.Spec.Pattern, b.ko.Spec.Pattern) {
 		delta.Add("Spec.Pattern", a.ko.Spec.Pattern, b.ko.Spec.Pattern)

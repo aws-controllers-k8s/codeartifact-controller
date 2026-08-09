@@ -34,13 +34,13 @@ type PackageGroupSpec struct {
 	// The name of the domain in which you want to create a package group.
 	//
 	// Regex Pattern: `^[a-z][a-z0-9\-]{0,48}[a-z0-9]$`
-	// +kubebuilder:validation:Required
-	Domain *string `json:"domain"`
+	Domain *string `json:"domain,omitempty"`
 	// The 12-digit account number of the Amazon Web Services account that owns
 	// the domain. It does not include dashes or spaces.
 	//
 	// Regex Pattern: `^[0-9]{12}$`
-	DomainOwner *string `json:"domainOwner,omitempty"`
+	DomainOwner *string                                  `json:"domainOwner,omitempty"`
+	DomainRef   *ackv1alpha1.AWSResourceReferenceWrapper `json:"domainRef,omitempty"`
 	// The pattern of the package group to create. The pattern is also the identifier
 	// of the package group.
 	//
