@@ -589,6 +589,11 @@ func (in *PackageGroupSpec) DeepCopyInto(out *PackageGroupSpec) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.DomainRef != nil {
+		in, out := &in.DomainRef, &out.DomainRef
+		*out = new(corev1alpha1.AWSResourceReferenceWrapper)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Pattern != nil {
 		in, out := &in.Pattern, &out.Pattern
 		*out = new(string)

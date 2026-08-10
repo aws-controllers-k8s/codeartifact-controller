@@ -64,6 +64,23 @@ spec:
 
                   Regex Pattern: `^[0-9]{12}$`
                 type: string
+              domainRef:
+                description: "AWSResourceReferenceWrapper provides a wrapper around
+                  *AWSResourceReference\ntype to provide more user friendly syntax
+                  for references using 'from' field\nEx:\nAPIIDRef:\n\n\tfrom:\n\t
+                  \ name: my-api"
+                properties:
+                  from:
+                    description: |-
+                      AWSResourceReference provides all the values necessary to reference another
+                      k8s resource for finding the identifier(Id/ARN/Name)
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    type: object
+                type: object
               pattern:
                 description: |-
                   The pattern of the package group to create. The pattern is also the identifier
@@ -85,7 +102,6 @@ spec:
                   type: object
                 type: array
             required:
-            - domain
             - pattern
             type: object
           status:

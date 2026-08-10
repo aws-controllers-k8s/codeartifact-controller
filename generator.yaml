@@ -60,6 +60,10 @@ resources:
           is_ignored: True
       Pattern:
         is_primary_key: true
+      Domain:
+        references:
+          resource: Domain
+          path: Spec.Name
     hooks:
       delta_pre_compare:
         code: compareTags(delta, a, b)
